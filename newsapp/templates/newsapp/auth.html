@@ -1,0 +1,56 @@
+{% extends 'newsapp/base.html' %}
+
+{% block content %}
+    <div style="max-width: 400px; margin: 100px auto; padding: 30px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h2 style="text-align: center;">
+            {% if mode == 'register' %}
+                Регистрация
+            {% else %}
+                Вход
+            {% endif %}
+        </h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                {% if mode == 'register' %}
+                    Зарегистрироваться
+                {% else %}
+                    Войти
+                {% endif %}
+            </button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            {% if mode == 'register' %}
+                Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+            {% else %}
+                Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+            {% endif %}
+        </p>
+    </div>
+   <style>
+       body.dark label {
+        color: #4da8ff !important;
+    }
+
+    body.dark h2 {
+        color: #4da8ff ;
+    }
+    body.dark .helptext,
+    body.dark ul {
+        color: #4da8ff ;
+    }
+
+    body.dark p,
+    body.dark p a {
+        color: #4da8ff ;
+    }
+
+    body.dark p a:hover {
+        color: #66b3ff;
+    }
+   </style>
+
+{% endblock %}

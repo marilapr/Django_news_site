@@ -1,0 +1,46 @@
+{% extends 'newsapp/base.html' %}
+
+{% block content %}
+    <img src="/media/main_news.jpg" alt="Новости" class="hero-image">
+
+    <div class="news-grid">
+        {% for news in news_list %}
+            <div class="news-card">
+                {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% else %}
+                    <img src="{'main_fon.avif'}" alt="Нет фото">
+                {% endif %}
+                <h3 class="news-title">{{ news.title }}</h3>
+                <p class="news-description">{{ news.description|truncatewords:30 }}</p>
+                <div class="news-meta">
+                    Автор: {{ news.author.username }} | {{ news.created_at|date:"d.m.Y H:i" }}
+                </div>
+                {% if user.is_authenticated and user == news.author %}
+                    <div class="news-actions">
+                        <a href="{% url 'edit_news' news.id %}" class="btn-edit">Редактировать</a>
+                        <a href="{% url 'delete_news' news.id %}" class="btn-delete" onclick="return confirm('Удалить новость?')"> Удалить</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Новостей пока нет. Будьте первым, кто добавит новость!</p>
+        {% endfor %}
+    </div>
+
+    {% if news_list.has_other_pages %}
+        <div class="pagination">
+            {% if news_list.has_previous %}
+                <a href="?page=1">« Первая</a>
+                <a href="?page={{ news_list.previous_page_number }}">‹ Назад</a>
+            {% endif %}
+            
+            <span>{{ news_list.number }} из {{ news_list.paginator.num_pages }}</span>
+            
+            {% if news_list.has_next %}
+                <a href="?page={{ news_list.next_page_number }}">Вперед ›</a>
+                <a href="?page={{ news_list.paginator.num_pages }}">Последняя »</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
